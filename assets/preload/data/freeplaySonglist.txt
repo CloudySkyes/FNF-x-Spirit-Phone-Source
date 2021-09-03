@@ -12,9 +12,4 @@ I-Earn-My-Life:maui:1
 Reaganomics:maui:1
 Man-Made-Object:maui:1
 Spiral-Of-Ants:maui:1
-Angelfire:maui:1
-Angry-People:maui:1
-Cat-Hacks:maui:1
-Crisis-Actors:maui:1
-Gravitron:maui:1
 Ancient-Aliens-Demo:maui:1
