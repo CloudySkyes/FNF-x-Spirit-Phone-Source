@@ -180,8 +180,10 @@ class TitleState extends MusicBeatState
 		ngSpr.screenCenter(X);
 		ngSpr.antialiasing = true;
 
-		ldSpr = new FlxSprite(0, FlxG.height * 0.52).loadGraphic(Paths.image('lenomdenom'));
+		ldSpr = new FlxSprite(0, FlxG.height * 0.54).loadGraphic(Paths.image('lenomdenom'));
 		add(ldSpr);
+		ldSpr.setGraphicSize(Std.int(ldSpr.width * 1.2));
+		ldSpr.updateHitbox();
 		ldSpr.visible = false;
 		ldSpr.screenCenter(X);
 		ldSpr.antialiasing = true;

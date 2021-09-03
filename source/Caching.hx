@@ -78,13 +78,16 @@ class Caching extends MusicBeatState
 		kadeLogo.alpha = 0;
 
 		#if cpp
-		trace("caching images...");
-
-		for (i in FileSystem.readDirectory(FileSystem.absolutePath("assets/shared/images/characters")))
+		if (FlxG.save.data.cacheImages)
 		{
-			if (!i.endsWith(".png"))
-				continue;
-			images.push(i);
+			trace("caching images...");
+
+			for (i in FileSystem.readDirectory(FileSystem.absolutePath("assets/shared/images/characters")))
+			{
+				if (!i.endsWith(".png"))
+					continue;
+				images.push(i);
+			}
 		}
 
 		trace("caching music...");

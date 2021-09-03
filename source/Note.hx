@@ -126,7 +126,7 @@ class Note extends FlxSprite
 		{
 			if (PlayState.SONG.noteStyle == null)
 			{
-				if (FlxG.save.data.noteSkins != false)
+				if (FlxG.save.data.noteSkins)
 				{
 					noteTypeCheck = 'circle';
 				}
