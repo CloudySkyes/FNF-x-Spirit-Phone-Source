@@ -87,7 +87,7 @@ class PlayState extends MusicBeatState
 	public static var isStoryMode:Bool = false;
 	public static var storyWeek:Int = 0;
 	public static var storyPlaylist:Array<String> = [];
-	public static var storyDifficulty:Int = 0;
+	public static var storyDifficulty:Int = 1;
 	public static var weekSong:Int = 0;
 	public static var weekScore:Int = 0;
 	public static var shits:Int = 0;
@@ -146,7 +146,6 @@ class PlayState extends MusicBeatState
 	public static var strumLineNotes:FlxTypedGroup<FlxSprite> = null;
 	public static var playerStrums:FlxTypedGroup<FlxSprite> = null;
 	public static var cpuStrums:FlxTypedGroup<FlxSprite> = null;
-	public var noteTypeCheck:String = 'normal';
 
 	private var camZooming:Bool = false;
 	private var curSong:String = "";
@@ -364,12 +363,8 @@ class PlayState extends MusicBeatState
 		detailsPausedText = "Paused - " + detailsText;
 
 		// Updating Discord Rich Presence.
-		DiscordClient.changePresence(detailsText
-			+ " "
-			+ SONG.song
-			+ " ("
-			+ storyDifficultyText
-			+ ") "
+		DiscordClient.changePresence(SONG.song
+			+ " - "
 			+ Ratings.GenerateLetterRank(accuracy),
 			"\nAcc: "
 			+ HelperFunctions.truncateFloat(accuracy, 2)
@@ -1060,7 +1055,7 @@ class PlayState extends MusicBeatState
 			add(boyfriend);
 		}
 
-		if (curSong == 'Tutorial')
+		if (curSong.toLowerCase() == 'tutorial')
 		{
 			gf.visible = false;
 			boyfriend.visible = true;
@@ -1428,15 +1423,8 @@ class PlayState extends MusicBeatState
 		inCutscene = false;
 
 		appearStaticArrows();
-		if (SONG.song.toLowerCase() == 'tutorial' || SONG.song.toLowerCase() == 'lifetime-achievement-award' || SONG.song.toLowerCase() == 'sweet-bod')
-		{
-			//generateStaticArrows(0);
-			//generateStaticArrows(1);
-		}
-		else
-		{
-			//generateStaticArrows(1);
-		}
+		//generateStaticArrows(0);
+		//generateStaticArrows(1);
 
 		if (startTime != 0)
 		{
@@ -1834,12 +1822,8 @@ class PlayState extends MusicBeatState
 
 		#if windows
 		// Updating Discord Rich Presence (with Time Left)
-		DiscordClient.changePresence(detailsText
-			+ " "
-			+ SONG.song
-			+ " ("
-			+ storyDifficultyText
-			+ ") "
+		DiscordClient.changePresence(SONG.song
+			+ " - "
 			+ Ratings.GenerateLetterRank(accuracy),
 			"\nAcc: "
 			+ HelperFunctions.truncateFloat(accuracy, 2)
@@ -2023,6 +2007,8 @@ class PlayState extends MusicBeatState
 		return FlxSort.byValues(FlxSort.ASCENDING, Obj1.strumTime, Obj2.strumTime);
 	}
 
+	var noteTypeCheck:String = 'normal';
+
 	private function generateStaticArrows(player:Int):Void
 	{
 		for (i in 0...4)
@@ -2032,7 +2018,7 @@ class PlayState extends MusicBeatState
 
 			if (SONG.noteStyle == null)
 			{
-				if (FlxG.save.data.noteSkins != false)
+				if (FlxG.save.data.noteSkins)
 				{
 					noteTypeCheck = 'circle';
 				}
@@ -2183,10 +2169,7 @@ class PlayState extends MusicBeatState
 
 	function tweenCamIn():Void
 	{
-		if (curSong == 'Tutorial')
-		{
-			FlxTween.tween(FlxG.camera, {zoom: 1.3}, (Conductor.stepCrochet * 4 / 1000), {ease: FlxEase.elasticInOut});
-		}
+		FlxTween.tween(FlxG.camera, {zoom: 1.3}, (Conductor.stepCrochet * 4 / 1000), {ease: FlxEase.elasticInOut});
 	}
 
 	override function openSubState(SubState:FlxSubState)
@@ -2202,11 +2185,9 @@ class PlayState extends MusicBeatState
 			#if windows
 			DiscordClient.changePresence("PAUSED on "
 				+ SONG.song
-				+ " ("
-				+ storyDifficultyText
-				+ ") "
+				+ " - "
 				+ Ratings.GenerateLetterRank(accuracy),
-				"Acc: "
+				"\nAcc: "
 				+ HelperFunctions.truncateFloat(accuracy, 2)
 				+ "% | Score: "
 				+ songScore
@@ -2236,12 +2217,8 @@ class PlayState extends MusicBeatState
 			#if windows
 			if (startTimer.finished)
 			{
-				DiscordClient.changePresence(detailsText
-					+ " "
-					+ SONG.song
-					+ " ("
-					+ storyDifficultyText
-					+ ") "
+				DiscordClient.changePresence(SONG.song
+					+ " - "
 					+ Ratings.GenerateLetterRank(accuracy),
 					"\nAcc: "
 					+ HelperFunctions.truncateFloat(accuracy, 2)
@@ -2254,7 +2231,7 @@ class PlayState extends MusicBeatState
 			}
 			else
 			{
-				DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ") " + Ratings.GenerateLetterRank(accuracy), iconRPC);
+				DiscordClient.changePresence(SONG.song + " - " + Ratings.GenerateLetterRank(accuracy), iconRPC);
 			}
 			#end
 		}
@@ -2272,12 +2249,8 @@ class PlayState extends MusicBeatState
 		vocals.play();
 
 		#if windows
-		DiscordClient.changePresence(detailsText
-			+ " "
-			+ SONG.song
-			+ " ("
-			+ storyDifficultyText
-			+ ") "
+		DiscordClient.changePresence(SONG.song
+			+ " - "
 			+ Ratings.GenerateLetterRank(accuracy),
 			"\nAcc: "
 			+ HelperFunctions.truncateFloat(accuracy, 2)
@@ -2464,6 +2437,16 @@ class PlayState extends MusicBeatState
 				iconP1.animation.play(SONG.player1);
 			else
 				iconP1.animation.play('bf-old');
+		}
+
+		if (FlxG.keys.justPressed.THREE) // because i want to
+		{
+			boyfriend.visible = !boyfriend.visible;
+		}
+
+		if (FlxG.keys.justPressed.FOUR)
+		{
+			gf.visible = !gf.visible;
 		}
 
 		switch (curStage)
@@ -2857,11 +2840,8 @@ class PlayState extends MusicBeatState
 
 		if (camZooming)
 		{
-			if (curSong == 'Tutorial')
-			{
-				FlxG.camera.zoom = FlxMath.lerp(defaultCamZoom, FlxG.camera.zoom, 0.95);
-			    camHUD.zoom = FlxMath.lerp(1, camHUD.zoom, 0.95);
-			}
+			FlxG.camera.zoom = FlxMath.lerp(defaultCamZoom, FlxG.camera.zoom, 0.95);
+			camHUD.zoom = FlxMath.lerp(1, camHUD.zoom, 0.95);
 		}
 
 		FlxG.watch.addQuick("curBPM", Conductor.bpm);
@@ -2869,16 +2849,6 @@ class PlayState extends MusicBeatState
 
 		FlxG.watch.addQuick("beatShit", curBeat);
 		FlxG.watch.addQuick("stepShit", curStep);
-
-		if (SONG.song.toLowerCase() == 'lifetime-achievement-award')
-		{
-			// camZooming = false;
-		}
-
-		if (SONG.song.toLowerCase() == 'sweet-bod')
-		{
-			// camZooming = false;
-		}
 
 		if (curSong == 'Fresh')
 		{
@@ -2929,9 +2899,7 @@ class PlayState extends MusicBeatState
 				// Game Over doesn't get his own variable because it's only used here
 				DiscordClient.changePresence("GAME OVER -- "
 					+ SONG.song
-					+ " ("
-					+ storyDifficultyText
-					+ ") "
+					+ " - "
 					+ Ratings.GenerateLetterRank(accuracy),
 					"\nAcc: "
 					+ HelperFunctions.truncateFloat(accuracy, 2)
@@ -2965,9 +2933,7 @@ class PlayState extends MusicBeatState
 				// Game Over doesn't get his own variable because it's only used here
 				DiscordClient.changePresence("GAME OVER -- "
 					+ SONG.song
-					+ " ("
-					+ storyDifficultyText
-					+ ") "
+					+ " - "
 					+ Ratings.GenerateLetterRank(accuracy),
 					"\nAcc: "
 					+ HelperFunctions.truncateFloat(accuracy, 2)
@@ -3035,7 +3001,7 @@ class PlayState extends MusicBeatState
 							// If not in botplay, only clip sustain notes when properly hit, botplay gets to clip it everytime
 							if (!PlayStateChangeables.botPlay)
 							{
-								if (FlxG.save.data.noteSkins != false)
+								if (SONG.noteStyle == 'circle')
 								{
 									if ((!daNote.mustPress || daNote.wasGoodHit || daNote.prevNote.wasGoodHit && !daNote.canBeHit)
 										&& daNote.y - daNote.offset.y * daNote.scale.y + daNote.height >= (strumLine.y + Note.swaggierWidth / 2))
@@ -3068,7 +3034,7 @@ class PlayState extends MusicBeatState
 							}
 							else
 							{
-								if (FlxG.save.data.noteSkins != false)
+								if (SONG.noteStyle == 'circle')
 								{
 									var swagRect = new FlxRect(0, 0, daNote.frameWidth * 2, daNote.frameHeight * 2);
 									swagRect.height = (strumLineNotes.members[Math.floor(Math.abs(daNote.noteData))].y
@@ -3107,7 +3073,7 @@ class PlayState extends MusicBeatState
 
 							if (!PlayStateChangeables.botPlay)
 							{
-								if (FlxG.save.data.noteSkins != false)	
+								if (SONG.noteStyle == 'circle')	
 								{
 									if ((!daNote.mustPress || daNote.wasGoodHit || daNote.prevNote.wasGoodHit && !daNote.canBeHit)
 										&& daNote.y + daNote.offset.y * daNote.scale.y <= (strumLine.y + Note.swaggierWidth / 2))
@@ -3140,7 +3106,7 @@ class PlayState extends MusicBeatState
 							}
 							else
 							{
-								if (FlxG.save.data.noteSkins != false)
+								if (SONG.noteStyle == 'circle')
 								{
 									var swagRect = new FlxRect(0, 0, daNote.width / daNote.scale.x, daNote.height / daNote.scale.y);
 									swagRect.y = (strumLineNotes.members[Math.floor(Math.abs(daNote.noteData))].y
@@ -3650,7 +3616,6 @@ class PlayState extends MusicBeatState
 
 			rating.loadGraphic(Paths.image(pixelShitPart1 + daRating + pixelShitPart2));
 			rating.screenCenter();
-			rating.y -= 0;
 			rating.x = coolText.x - 580;
 
 			if (FlxG.save.data.changedHit)
@@ -4076,7 +4041,6 @@ class PlayState extends MusicBeatState
 			else
 				spr.centerOffsets();
 		});
-
 		playerStrums.forEach(function(sprCircle:FlxSprite)
 		{
 			if (sprCircle.animation.curAnim.name == 'confirm' && noteTypeCheck == 'circle')
@@ -4150,6 +4114,7 @@ class PlayState extends MusicBeatState
 		FlxG.stage.window.onFocusIn.add(focusIn);
 
 		var ourSource:String = "assets/videos/daWeirdVid/dontDelete.webm";
+		// WebmPlayer.SKIP_STEP_LIMIT = 90;
 		var str1:String = "WEBM SHIT";
 		webmHandler = new WebmHandler();
 		webmHandler.source(ourSource);
@@ -4572,14 +4537,10 @@ class PlayState extends MusicBeatState
 		songLength = FlxG.sound.music.length;
 
 		// Updating Discord Rich Presence (with Time Left)
-		DiscordClient.changePresence(detailsText
-			+ " "
-			+ SONG.song
-			+ " ("
-			+ storyDifficultyText
-			+ ") "
+		DiscordClient.changePresence(SONG.song
+			+ " - "
 			+ Ratings.GenerateLetterRank(accuracy),
-			"Acc: "
+			"\nAcc: "
 			+ HelperFunctions.truncateFloat(accuracy, 2)
 			+ "% | Score: "
 			+ songScore

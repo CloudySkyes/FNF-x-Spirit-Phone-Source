@@ -180,8 +180,10 @@ class TitleState extends MusicBeatState
 		ngSpr.screenCenter(X);
 		ngSpr.antialiasing = true;
 
-		ldSpr = new FlxSprite(0, FlxG.height * 0.52).loadGraphic(Paths.image('lenomdenom'));
+		ldSpr = new FlxSprite(0, FlxG.height * 0.54).loadGraphic(Paths.image('lenomdenom'));
 		add(ldSpr);
+		ldSpr.setGraphicSize(Std.int(ldSpr.width * 1.2));
+		ldSpr.updateHitbox();
 		ldSpr.visible = false;
 		ldSpr.screenCenter(X);
 		ldSpr.antialiasing = true;
@@ -296,19 +298,7 @@ class TitleState extends MusicBeatState
 				
 				http.onData = function (data:String)
 				{
-					returnedData[0] = data.substring(0, data.indexOf(';'));
-					returnedData[1] = data.substring(data.indexOf('-'), data.length);
-				  	if (!MainMenuState.kadeEngineVer.contains(returnedData[0].trim()) && !OutdatedSubState.leftState && MainMenuState.nightly == "")
-					{
-						trace('outdated lmao! ' + returnedData[0] + ' != ' + MainMenuState.kadeEngineVer);
-						OutdatedSubState.needVer = returnedData[0];
-						OutdatedSubState.currChanges = returnedData[1];
-						FlxG.switchState(new OutdatedSubState());
-					}
-					else
-					{
-						FlxG.switchState(new MainMenuState());
-					}
+					FlxG.switchState(new MainMenuState());
 				}
 				
 				http.onError = function (error) {

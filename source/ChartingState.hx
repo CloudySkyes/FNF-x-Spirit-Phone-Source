@@ -1250,6 +1250,26 @@ class ChartingState extends MusicBeatState
 	var stepperSusLength:FlxUINumericStepper;
 
 	var tab_group_note:FlxUI;
+
+	function goToSection(section:Int)
+	{
+		var beat = section * 4;
+		var data = TimingStruct.getTimingAtBeat(beat);
+
+		if (data == null)
+			return;
+
+		FlxG.sound.music.time = (data.startTime + ((beat - data.startBeat) / (data.bpm / 60))) * 1000;
+		if (!PlayState.isSM)
+			vocals.time = FlxG.sound.music.time;
+		curSection = section;
+		trace("Going too " + FlxG.sound.music.time + " | " + section + " | Which is at " + beat);
+
+		if (FlxG.sound.music.time < 0)
+			FlxG.sound.music.time = 0;
+		else if (FlxG.sound.music.time > FlxG.sound.music.length)
+			FlxG.sound.music.time = FlxG.sound.music.length;
+	}
 	
 	function addNoteUI():Void
 	{
@@ -1466,6 +1486,8 @@ class ChartingState extends MusicBeatState
 	public var currentBPM:Float = 0;
 	public var lastBPM:Float = 0;
 
+	public var snapSelection = 3;
+
 	public var updateFrame = 0;
 	public var lastUpdatedSection:SwagSection = null;
 
@@ -1569,15 +1591,26 @@ class ChartingState extends MusicBeatState
 
 							if (data != null)
 							{
-	
+								
 								FlxG.sound.music.time = (data.startTime + ((beats - data.startBeat) / (bpm/60)) ) * 1000;
 							}
 						}
+						else
+							FlxG.sound.music.time -= (FlxG.mouse.wheel * Conductor.stepCrochet * 0.4);
+
+						if (FlxG.sound.music.time > FlxG.sound.music.length)
+							FlxG.sound.music.time = FlxG.sound.music.length;
+					
 						if (!PlayState.isSM)
 						vocals.time = FlxG.sound.music.time;
 					}
 				}
 		}
+
+		if (FlxG.keys.justPressed.RIGHT && !FlxG.keys.pressed.CONTROL)
+			goToSection(curSection + 1);
+		else if (FlxG.keys.justPressed.LEFT && !FlxG.keys.pressed.CONTROL)
+			goToSection(curSection - 1);
 
 		if (updateFrame == 4)
 		{
@@ -1614,21 +1647,47 @@ class ChartingState extends MusicBeatState
 		else if (updateFrame != 5)
 			updateFrame++;
 
-		snapText.text = "Snap: 1/" + snap + " (" + (doSnapShit ? "Shift to disable, Left or Right to increase/decrease" : "Snap Disabled, Shift to renable.") + ")\nAdd Notes: 1-8 (or click)\nZoom: " + zoomFactor;
+		snapText.text = "Snap: 1/" + snap + " (" + (doSnapShit ? "Shift to disable, CTRL Left or Right to increase/decrease" : "Snap Disabled, Shift to renable.") + ")\nAdd Notes: CTRL + 1-8 (or click)\nZoom: " + zoomFactor;
 
 
-		if (FlxG.keys.justPressed.RIGHT)
-			snap = snap * 2;
-		if (FlxG.keys.justPressed.LEFT)
-			snap = Math.round(snap / 2);
-		if (snap >= 64)
-			snap = 64;
-		if (snap <= 4)
-			snap = 4;
-		/*
-		if (FlxG.keys.justPressed.SHIFT)
-			doSnapShit = !doSnapShit;
-		*/
+		if (FlxG.keys.justPressed.RIGHT && FlxG.keys.pressed.CONTROL)
+		{
+			snapSelection++;
+			var index = 6;
+			if (snapSelection > 6)
+				snapSelection = 6;
+			if (snapSelection < 0)
+				snapSelection = 0;
+			for (v in deezNuts.keys()){
+				trace(v);
+				if (index == snapSelection)
+				{
+					trace("found " + v + " at " + index);
+					snap = v;
+				}
+				index--;
+			   }
+			trace("new snap " + snap + " | " + snapSelection);
+		}
+		if (FlxG.keys.justPressed.LEFT && FlxG.keys.pressed.CONTROL)
+		{
+			snapSelection--;
+			if (snapSelection > 6)
+				snapSelection = 6;
+			if (snapSelection < 0)
+				snapSelection = 0;
+			var index = 6;
+			for (v in deezNuts.keys()){
+				trace(v);
+				if (index == snapSelection)
+				{
+					trace("found " + v + " at " + index);
+					snap = v;
+				}
+				index--;
+			   }
+			trace("new snap " + snap + " | " + snapSelection);
+		}
 
 		doSnapShit = defaultSnap;
 		if (FlxG.keys.pressed.SHIFT)
@@ -1696,14 +1755,14 @@ class ChartingState extends MusicBeatState
 		+ zoomFactor;
 
 
-		var left = FlxG.keys.justPressed.ONE;
-		var down = FlxG.keys.justPressed.TWO;
-		var up = FlxG.keys.justPressed.THREE;
-		var right = FlxG.keys.justPressed.FOUR;
-		var leftO = FlxG.keys.justPressed.FIVE;
-		var downO = FlxG.keys.justPressed.SIX;
-		var upO = FlxG.keys.justPressed.SEVEN;
-		var rightO = FlxG.keys.justPressed.EIGHT;
+		var left = FlxG.keys.justPressed.ONE && FlxG.keys.pressed.CONTROL;
+		var down = FlxG.keys.justPressed.TWO && FlxG.keys.pressed.CONTROL;
+		var up = FlxG.keys.justPressed.THREE && FlxG.keys.pressed.CONTROL;
+		var right = FlxG.keys.justPressed.FOUR && FlxG.keys.pressed.CONTROL;
+		var leftO = FlxG.keys.justPressed.FIVE && FlxG.keys.pressed.CONTROL;
+		var downO = FlxG.keys.justPressed.SIX && FlxG.keys.pressed.CONTROL;
+		var upO = FlxG.keys.justPressed.SEVEN && FlxG.keys.pressed.CONTROL;
+		var rightO = FlxG.keys.justPressed.EIGHT && FlxG.keys.pressed.CONTROL;
 
 		var pressArray = [left, down, up, right, leftO, downO, upO, rightO];
 		var delete = false;

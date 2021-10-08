@@ -88,6 +88,7 @@ class FreeplayState extends MusicBeatState
 			FreeplayState.loadDiff(0,format,meta.songName,diffs);
 			FreeplayState.songData.set(meta.songName,diffs);
 			trace('loaded diffs for ' + meta.songName);
+
 		}
 
 		trace("tryin to load sm files");
@@ -374,12 +375,11 @@ class FreeplayState extends MusicBeatState
 	function changeDiff(change:Int = 0)
 	{
 		curDifficulty += change;
-
+				
 		if (curDifficulty < 0)
 			curDifficulty = 0;
 		if (curDifficulty > 0)
 			curDifficulty = 0;
-
 
 		// adjusting the highscore song name to be compatible (changeDiff)
 		var songHighscore = StringTools.replace(songs[curSelected].songName, " ", "-");

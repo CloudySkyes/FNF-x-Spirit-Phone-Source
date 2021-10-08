@@ -203,6 +203,7 @@ class AccuracyOption extends Option
 		return "Accuracy " + (!FlxG.save.data.accuracyDisplay ? "off" : "on");
 	}
 }
+
 class NoteStyles extends Option
 {
 	public function new(desc:String)
@@ -746,7 +747,7 @@ class OffsetMenu extends Option
 	public override function press():Bool
 	{
 		trace("switch");
-		var poop:String = Highscore.formatSong("Tutorial", 0);
+		var poop:String = Highscore.formatSong("Tutorial", 1);
 
 		PlayState.SONG = Song.loadFromJson(poop, "Tutorial");
 		PlayState.isStoryMode = false;
@@ -912,10 +913,10 @@ class ResetSettings extends Option
 		FlxG.save.data.botplay = null;
 		FlxG.save.data.cpuStrums = null;
 		FlxG.save.data.strumline = null;
+		FlxG.save.data.noteSkins = null;
 		FlxG.save.data.customStrumLine = null;
 		FlxG.save.data.camzoom = null;
 		FlxG.save.data.stepMania = null;
-		FlxG.save.data.noteSkins = null;
 		KadeEngineData.initSave();
 		confirm = false;
 		trace('All settings have been reset');

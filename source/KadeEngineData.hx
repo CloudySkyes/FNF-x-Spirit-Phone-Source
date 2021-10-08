@@ -42,6 +42,8 @@ class KadeEngineData
 			FlxG.save.data.changedHitY = -1;
 			FlxG.save.data.changedHit = false;
 		}
+		if (FlxG.save.data.noteSkins == null)
+			FlxG.save.data.noteSkins = false;
 
 		if (FlxG.save.data.fpsRain == null)
 			FlxG.save.data.fpsRain = false;
@@ -108,9 +110,6 @@ class KadeEngineData
 		
 		if (FlxG.save.data.cacheImages == null)
 			FlxG.save.data.cacheImages = false;
-	    
-		if (FlxG.save.data.noteSkins == null)
-			FlxG.save.data.noteSkins = false;
 
 		var gamepad:FlxGamepad = FlxG.gamepads.lastActive;
 		
