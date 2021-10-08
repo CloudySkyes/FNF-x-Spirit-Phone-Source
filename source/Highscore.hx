@@ -92,9 +92,9 @@ class Highscore
 	public static function formatSong(song:String, diff:Int):String
 	{
 		var daSong:String = song;
-		
-	    if (diff == 0)
-		    daSong += '';
+
+		if (diff == 0)
+			daSong += '';
 
 		return daSong;
 	}

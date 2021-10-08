@@ -88,7 +88,6 @@ class FreeplayState extends MusicBeatState
 			FreeplayState.loadDiff(0,format,meta.songName,diffs);
 			FreeplayState.songData.set(meta.songName,diffs);
 			trace('loaded diffs for ' + meta.songName);
-
 		}
 
 		trace("tryin to load sm files");
