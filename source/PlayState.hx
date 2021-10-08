@@ -1103,7 +1103,7 @@ class PlayState extends MusicBeatState
 		playerStrums = new FlxTypedGroup<FlxSprite>();
 		cpuStrums = new FlxTypedGroup<FlxSprite>();
 
-		if (SONG.song.toLowerCase() == 'tutorial' || SONG.song.toLowerCase() == 'lifetime-achievement-award' || SONG.song.toLowerCase() == 'sweet-bod')
+		if (SONG.song.toLowerCase() == 'tutorial')
 		{
 			generateStaticArrows(0);
 			generateStaticArrows(1);
@@ -2148,10 +2148,6 @@ class PlayState extends MusicBeatState
 			cpuStrums.forEach(function(spr:FlxSprite)
 			{					
 				spr.centerOffsets(); //CPU arrows start out slightly off-center
-				if (SONG.song.toLowerCase() == 'lifetime-achievement-award' || SONG.song.toLowerCase() == 'sweet-bod')
-				{
-					spr.visible = false;
-				}
 			});
 
 			strumLineNotes.add(babyArrow);
